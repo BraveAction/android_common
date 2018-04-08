@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--mToolbar-->
+    <dimen name="toolbar_height">45dp</dimen>
+    <dimen name="productNameSize">16sp</dimen>
+</resources>

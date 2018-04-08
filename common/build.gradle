@@ -1,0 +1,194 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+apply plugin: 'me.tatarka.retrolambda'
+
+android {
+    compileSdkVersion rootProject.compileSdkVersion
+    buildToolsVersion rootProject.buildToolsVersion
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled true
+    }
+
+    defaultConfig {
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+//    compile 'org.jetbrains.kotlin:kotlin-stdlib:' + rootProject.kotlin_version
+//    compile 'org.jetbrains.kotlin:kotlin-reflect:' + rootProject.kotlin_version
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    compile 'com.android.support:support-v4:' + rootProject.supportLibVersion
+    compile 'com.android.support:appcompat-v7:' + rootProject.supportLibVersion
+    compile 'com.android.support:design:' + rootProject.supportLibVersion
+    compile 'com.android.support:support-vector-drawable:' + rootProject.supportLibVersion
+    compile 'com.android.support:cardview-v7:' + rootProject.supportLibVersion
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+
+    //      上拉刷新下拉加载
+    //      https://github.com/liaohuqiu/android-Ultra-Pull-To-Refresh
+    //      https://github.com/captainbupt/android-Ultra-Pull-To-Refresh-With-Load-More
+    compile 'in.srain.cube:ptr-load-more:1.0.6'
+    //      compile 'in.srain.cube:ultra-ptr:1.0.11'
+    //      https://github.com/BraveAction/BottomNavigationViewEx#zh
+    compile 'com.github.ittianyu:BottomNavigationViewEx:1.1.6'
+
+    //      引导页
+    //      https://github.com/BraveAction/AppIntro
+    compile 'com.github.paolorotolo:appintro:4.1.0'
+
+    //      徽章
+    //      https://github.com/bingoogolapple/BGABadgeView-Android
+    //      compile 'cn.bingoogolapple:bga-badgeview:1.1.3'
+    //      https://github.com/AlexLiuSheng/BadgeView
+    compile 'com.allenliu.badgeview:library:1.1.1'
+
+    //      响应式框架
+    //      https://github.com/ReactiveX/RxJava
+    compile 'io.reactivex.rxjava2:rxjava:2.0.8'
+    //      https://github.com/ReactiveX/RxAndroid
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    compile 'io.reactivex:rxjava:1.2.9'
+    compile 'io.reactivex:rxandroid:1.2.1'
+
+    //      网络请求
+    //      https://github.com/square/okhttp
+    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+    //      https://github.com/square/retrofit
+    compile 'com.squareup.retrofit2:retrofit:2.2.0'
+    //      https://github.com/square/retrofit/tree/master/retrofit-adapters/rxjava2
+    compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
+    //      https://github.com/square/retrofit/tree/master/retrofit-converters/gson
+    compile 'com.squareup.retrofit2:converter-gson:2.2.0'
+    //      okhttp cookieJar
+    //      https://github.com/franmontiel/PersistentCookieJar
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+
+    //      json解析
+    //      https://github.com/google/gson
+    compile 'com.google.code.gson:gson:2.8.0'
+    //      https://github.com/google/guava
+    compile 'com.google.guava:guava:20.0'
+
+    //      事件总线/数据库
+    //      https://github.com/greenrobot/EventBus
+    compile 'org.greenrobot:eventbus:3.0.0'
+
+    //      https://github.com/greenrobot/greenDAO
+    //      数据库 sqlite orm
+    compile 'org.greenrobot:greendao:3.2.0'
+    //      https://www.zetetic.net/sqlcipher/sqlcipher-for-android/
+    //      https://github.com/sqlcipher/sqlcipher
+    //      加密sqlite
+    //      compile 'net.zetetic:android-database-sqlcipher:3.5.6'
+    //      https://github.com/square/sqlbrite
+
+    //      图片缓存
+    //      https://github.com/bumptech/glide
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+    //      compile 'com.github.bumptech.glide:okhttp3-integration:1.5.0@aar'
+    compile 'com.nineoldandroids:library:2.4.0'
+    //      glide图片效果库
+    //      https://github.com/wasabeef/glide-transformations
+    compile 'jp.wasabeef:glide-transformations:2.0.2'
+
+    //      阿里VirtualLayout是一个针对RecyclerView的LayoutManager扩展, 主要提供一整套布局方案和布局间的组件复用的问题。
+    //      https://github.com/alibaba/vlayout
+    compile('com.alibaba.android:vlayout:1.0.7@aar') {
+        transitive = true
+    }
+    //      碎片式布局
+    //      https://github.com/BelooS/ChipsLayoutManager
+    compile 'com.beloo.widget:ChipsLayoutManager:0.3.7@aar'
+    //      https://github.com/MiguelCatalan/MaterialSearchView
+    //      compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    //      textView内容自适应
+    //      https://github.com/grantland/android-autofittextview
+    //      https://github.com/txusballesteros/AutosizeEditText
+    compile 'me.grantland:autofittextview:0.2.1'
+    //      评分条
+    compile 'me.zhanghai.android.materialratingbar:library:1.0.2'
+    //      上传文件,下载文件进度监听
+    //      https://github.com/lizhangqu/CoreProgress
+    //      compile 'cn.edu.zafu:coreprogress:0.0.3'
+
+    //测试框架
+    testCompile 'org.jetbrains.kotlin:kotlin-test-junit:' + rootProject.kotlin_version
+    testCompile 'junit:junit:' + rootProject.junitVersion
+    testCompile 'org.mockito:mockito-core:' + rootProject.mockitoVersion
+    //    testInstrumentationRunner
+    androidTestCompile 'com.android.support.test:runner:' + rootProject.runnerVersion
+    androidTestCompile 'com.android.support.test:rules:' + rootProject.rulesVersion
+    // Resolve conflicts between main and test APK:
+    androidTestCompile 'com.android.support:support-annotations:' + rootProject.supportLibVersion
+
+    compile 'com.android.support.test.espresso:espresso-idling-resource:' + rootProject.espressoVersion
+    androidTestCompile('com.android.support.test.espresso:espresso-core:' + rootProject.espressoVersion, {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+//    androidTestCompile 'com.android.support.test.espresso:espresso-core:' + rootProject.espressoVersion
+    compile 'com.android.support.test.espresso:espresso-idling-resource:' + rootProject.espressoVersion
+//    androidTestCompile 'com.android.support.test.espresso:espresso-intents:' + rootProject.espressoVersion
+    androidTestCompile('com.android.support.test.espresso:espresso-contrib:' + rootProject.espressoVersion) {
+        exclude group: 'com.android.support', module: 'support-v4'
+        exclude module: 'recyclerview-v7'
+        exclude module: 'design'
+    }
+
+//    androidTestCompile("com.android.support.test.espresso:espresso-contrib:$ESPRESSO_VERSION") {
+//        exclude group: 'com.android.support', module: 'appcompat'
+//        exclude group: 'com.android.support', module: 'support-v4'
+//        exclude group: 'com.android.support', module: 'support-v7'
+//        exclude group: 'com.android.support', module: 'design'
+//        exclude module: 'support-annotations'
+//        exclude module: 'recyclerview-v7'
+//    }
+    androidTestCompile 'com.android.support:recyclerview-v7:' + rootProject.supportLibVersion
+    androidTestCompile 'junit:junit:' + rootProject.junitVersion
+}
+/*
+Resolves dependency versions across test and production APKs, specifically, transitive
+dependencies. This is required since Espresso internally has a dependency on support-annotations.
+*/
+configurations.all {
+    resolutionStrategy.force 'com.android.support:support-annotations:' + rootProject.supportLibVersion
+}
+
+/*
+All direct/transitive dependencies shared between your test and production APKs need to be
+excluded from the test APK! This is necessary because both APKs will contain the same classes. Not
+excluding these dependencies from your test configuration will result in an dex pre-verifier error
+at runtime. More info in this tools bug: (https://code.google.com/p/android/issues/detail?id=192497)
+*/
+//configurations.compile.dependencies.each { compileDependency ->
+//    println "Excluding compile dependency: ${compileDependency.getName()}"
+//    configurations.androidTestCompile.dependencies.each { androidTestCompileDependency ->
+//        configurations.androidTestCompile.exclude module: "${compileDependency.getName()}"
+//    }
+//}

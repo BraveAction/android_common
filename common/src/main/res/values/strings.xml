@@ -1,0 +1,28 @@
+<resources>
+    <!--authorities-->
+    <string name="authority">fileprovider</string>
+    <!--网络请求处理-->
+    <string name="progressDialogMsg">数据加载中...</string>
+    <string name="serverBusy">服务器繁忙,请重试!</string>
+    <string name="requestTimeout">请求超时,请重试!</string>
+    <string name="failedToConnect">与服务器失去链接!</string>
+    <string name="dataParseException">数据解析异常,我们会尽快解决!</string>
+    <string name="noNetwork">没有网络连接,请连接网络后重试!</string>
+    <string name="noNetWork">小主，你的网络不美丽，戳一下试试!</string>
+    <string name="theSpecifiedException">小主，你的网络不美丽，戳一下试试!</string>
+
+
+    <string name="noData">没有请求到任何数据!</string>
+    <string name="serverException">OMG!服务器接口代码撸的有问题!!!</string>
+    <string name="myException">OMG!代码撸的有问题!!!</string>
+    <string name="crash_toast_text">崩溃了</string>
+    <string name="noLogin">用户未登录</string>
+
+    <string name="upgrade_defaultMessage">1:修改已知bug\n2:界面美化,增强用户体验</string>
+
+
+    <string name="upgrade_apk_write_permissionDenied">您没有授予读取设备存储的权限,无法为您下载最新版本.</string>
+
+
+    <string name="noMore">没有更多了</string>
+</resources>

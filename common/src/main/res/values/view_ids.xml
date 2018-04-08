@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="errorLayout" type="id">errorLayout</item>
+    <item name="errorMsg" type="id">errorMsg</item>
+
+
+    <item name="fragment_ptrl_recyclerview" type="id">fragment_ptrl_recyclerview</item>
+    <item name="refreshLayout" type="id">refreshLayout</item>
+    <item name="recyclerView" type="id">recyclerView</item>
+
+
+</resources>

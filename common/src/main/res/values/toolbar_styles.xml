@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="toolbarLayout">
+        <item name="android:id">@id/toolbar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_height">@dimen/toolbar_height</item>
+        <item name="android:background">@color/toolbar_bg</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:theme">?attr/actionBarTheme</item>
+    </style>
+    <style name="toolbarTitle">
+        <item name="android:id">@id/toolbarTitle</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">@style/TextAppearance.Widget.AppCompat.Toolbar.Title
+        </item>
+        <item name="android:textColor">@color/toolbar_title</item>
+    </style>
+
+    <style name="MyTabLayoutTextAppearance"
+           parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textSize">@dimen/productNameSize</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+    </style>
+</resources>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--参考 http://www.devio.org/tags/#Android-->
+    <!--适配android7.0,FileProvider解决应用间共享文件的问题的步骤:
+    1:AndroidManifest文件<application>中追加
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+    2:增加共享目录如:
+       <external-path
+            name="videoDir"
+            path="/yuerbao/cache/videos/"
+       />
+    3:代码中修改
+        Uri uri = Uri.fromFile(apkFile);
+        修改为:
+        Uri uri = FileProvider.getUriForFile(mContext, "org.yuerbao.fileprovider", apkFile);
+    -->
+    <resources>
+        <paths>
+            <external-path
+                name="camera_photos"
+                path="/org.yang.common/"/>
+            <external-path
+                name="appUpgradeDir"
+                path="/org.yang.common/"/>
+        </paths>
+    </resources>
+</resources>

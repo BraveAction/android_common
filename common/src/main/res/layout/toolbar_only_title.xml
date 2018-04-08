@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.Toolbar
+    style="@style/toolbarLayout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:contentInsetLeft="0dp"
+    app:contentInsetStart="0dp"
+    app:contentInsetStartWithNavigation="0dp">
+    <TextView style="@style/toolbarTitle"/>
+</android.support.v7.widget.Toolbar>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--当列表没有完全填充窗口时使用此布局,显示列表结果集为空的情况-->
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data></data>
+    <FrameLayout android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:background="@color/activityBgColor"
+                 android:gravity="center_horizontal">
+        <org.yang.common.recyclerView.RecyclerViewEmptySupport
+            android:id="@id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone">
+        </org.yang.common.recyclerView.RecyclerViewEmptySupport>
+        <TextView
+            android:id="@+id/emptyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/noData"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+</layout>
