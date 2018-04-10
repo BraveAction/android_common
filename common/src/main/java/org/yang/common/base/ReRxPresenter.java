@@ -1,7 +1,6 @@
 package org.yang.common.base;
 
 import org.yang.common.BasePresenter;
-import org.yang.common.base.NetRequestHelper;
 import org.yang.common.net.EPType;
 import org.yang.common.net.RetrofitClient;
 import org.yang.common.net.RxSchedules;
@@ -26,8 +25,8 @@ import io.reactivex.subscribers.ResourceSubscriber;
 
 public abstract class ReRxPresenter<S> implements BasePresenter {
     protected S mApiServices = (S) RetrofitClient.getInstance().getServices();
-    protected CompositeDisposable mComposite = new CompositeDisposable();
-    protected NetRequestHelper mNetRequestHelper;
+    private CompositeDisposable mComposite = new CompositeDisposable();
+    private NetRequestHelper mNetRequestHelper;
 
     public ReRxPresenter(NetRequestHelper netRequestHelper) {
         this.mNetRequestHelper = netRequestHelper;
