@@ -1,21 +1,18 @@
 package org.yang.common.activity;
 
 import android.databinding.ViewDataBinding;
-import android.os.IInterface;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 
 import org.reactivestreams.Subscription;
 import org.yang.common.R;
-import org.yang.common.activity.SuperActivity;
 import org.yang.common.base.BaseResponse;
 import org.yang.common.components.OnRecyclerViewLoadListener;
 import org.yang.common.net.EPType;
 import org.yang.common.recyclerView.BaseAdapter;
 import org.yang.common.recyclerView.RecyclerViewEmptySupport;
 import org.yang.common.recyclerView.RecyclerViewUtils;
-import org.yang.common.recyclerView.SuperAdapter;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ import io.reactivex.annotations.NonNull;
  * Created by Gxy on 2017/5/24
  */
 
-public abstract class BaseRecyclerViewActivity<VB extends  ViewDataBinding,S, RESP extends BaseResponse> extends SuperActivity<VB,S,RESP> implements OnRecyclerViewLoadListener {
+public abstract class BaseRecyclerViewActivity<VB extends ViewDataBinding, S, RESP extends BaseResponse> extends SuperActivity<VB, S, RESP> implements OnRecyclerViewLoadListener {
     protected PtrFrameLayout mPtrFrameLayout;
     protected int mCurrentPage = 1;     //分页结果集使用
     protected BaseAdapter mAdapter;

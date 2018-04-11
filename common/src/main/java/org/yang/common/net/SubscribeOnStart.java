@@ -1,8 +1,7 @@
 package org.yang.common.net;
 
-import org.yang.common.base.NetRequestHelper;
-
 import org.reactivestreams.Subscription;
+import org.yang.common.base.NetRequestHelper;
 
 import io.reactivex.annotations.NonNull;
 
@@ -12,7 +11,7 @@ import io.reactivex.annotations.NonNull;
 
 public final class SubscribeOnStart extends BaseConsumer<Subscription> {
 
-    public SubscribeOnStart(NetRequestHelper netRequestHelper, EPType EPType) {
+    protected SubscribeOnStart(NetRequestHelper netRequestHelper, EPType EPType) {
         super(netRequestHelper, EPType);
     }
 

@@ -4,9 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.databinding.adapters.ListenerUtil;
 import android.os.Bundle;
-import android.os.IInterface;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.StringRes;
@@ -37,16 +35,14 @@ import java.lang.reflect.Method;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableSubscriber;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Gxy on 2017/4/1
  */
-public abstract class SuperActivity<VB extends  ViewDataBinding,S, RES extends BaseResponse> extends AppCompatActivity implements BaseWindow, View.OnClickListener, NetRequestHelper {
+public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends BaseResponse> extends AppCompatActivity implements BaseWindow, View.OnClickListener, NetRequestHelper {
     protected S mApiServices;
     protected VB mBinding;
-    protected CompositeDisposable mComposite = new CompositeDisposable();
     private RetrofitClient mRetrofitClient;
     //    private ProgressDialog mProgressDialog;
     private CustomProgressDialog mProgressDialog;
@@ -123,6 +119,12 @@ public abstract class SuperActivity<VB extends  ViewDataBinding,S, RES extends B
         }
     }
 
+    @Override
+    public void add(Disposable disposable) {
+        if (mComposite != null) {
+            mComposite.add(disposable);
+        }
+    }
 
     //--------------------------------------------------------//
     //----------------------进度条---------------------------//
@@ -337,7 +339,7 @@ public abstract class SuperActivity<VB extends  ViewDataBinding,S, RES extends B
         mComposite.add((Disposable) flowable.compose(RxSchedules.mainThread()).
                 doOnSubscribe(baseConsumerFactory.create(BaseConsumer.START)).
                 doOnNext(baseConsumerFactory.create(BaseConsumer.NEXT)).
-                doOnComplete(() -> BaseConsumerFactory.mNetRequestHelper.hideProgressDialog()).
+                doOnComplete(() -> this.hideProgressDialog()).
                 doOnError(baseConsumerFactory.create(BaseConsumer.ERROR))
                 .subscribeWith(subscriber));
     }

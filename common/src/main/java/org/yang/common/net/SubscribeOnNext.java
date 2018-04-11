@@ -12,7 +12,7 @@ import io.reactivex.annotations.NonNull;
  */
 
 public final class SubscribeOnNext<T extends BaseResponse> extends BaseConsumer<T> {
-    public SubscribeOnNext(NetRequestHelper netRequestHelper, EPType EPType) {
+    protected SubscribeOnNext(NetRequestHelper netRequestHelper, EPType EPType) {
         super(netRequestHelper, EPType);
     }
 

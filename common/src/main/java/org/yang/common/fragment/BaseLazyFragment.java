@@ -35,6 +35,7 @@ import java.lang.reflect.Method;
 
 import io.reactivex.Flowable;
 import io.reactivex.FlowableSubscriber;
+import io.reactivex.disposables.Disposable;
 
 /**
  * Created by Gxy on 2017/2/4
@@ -323,6 +324,11 @@ public abstract class BaseLazyFragment extends Fragment implements BaseWindow, V
     @Override
     public void showMessage(@StringRes int errorMsgRes) {
         showMessage(getString(errorMsgRes));
+    }
+
+    @Override
+    public void add(Disposable disposable) {
+        mContext.add(disposable);
     }
 
 }

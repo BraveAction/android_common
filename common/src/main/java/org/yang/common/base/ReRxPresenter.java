@@ -1,15 +1,13 @@
 package org.yang.common.base;
 
 import org.yang.common.BasePresenter;
+import org.yang.common.net.BaseConsumer;
+import org.yang.common.net.BaseConsumerFactory;
 import org.yang.common.net.EPType;
 import org.yang.common.net.RetrofitClient;
 import org.yang.common.net.RxSchedules;
-import org.yang.common.net.SubscribeOnError;
-import org.yang.common.net.SubscribeOnNext;
-import org.yang.common.net.SubscribeOnStart;
 
 import io.reactivex.Flowable;
-import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
@@ -25,7 +23,6 @@ import io.reactivex.subscribers.ResourceSubscriber;
 
 public abstract class ReRxPresenter<S> implements BasePresenter {
     protected S mApiServices = (S) RetrofitClient.getInstance().getServices();
-    private CompositeDisposable mComposite = new CompositeDisposable();
     private NetRequestHelper mNetRequestHelper;
 
     public ReRxPresenter(NetRequestHelper netRequestHelper) {
@@ -37,39 +34,40 @@ public abstract class ReRxPresenter<S> implements BasePresenter {
 
     }
 
-    private Flowable doInMainThread(Flowable flowable, EPType epType) {
-        return flowable.
-                compose(RxSchedules.mainThread()).
-                doOnSubscribe(new SubscribeOnStart(mNetRequestHelper, epType)).
-                doOnNext(new SubscribeOnNext(mNetRequestHelper, epType)).
-                doOnComplete(() -> mNetRequestHelper.hideProgressDialog()).
-                doOnError(new SubscribeOnError(mNetRequestHelper, epType));
-    }
-
-    protected <T> void doRequest(Flowable<T> flowable, EPType epType, DisposableSubscriber<T> subscriber) {
-        mComposite.add((Disposable) doInMainThread(flowable, epType).subscribeWith(subscriber));
-    }
-
-    protected <T> void doRequest(Flowable<T> flowable, EPType epType, ResourceSubscriber<T> subscriber) {
-        mComposite.add((Disposable) doInMainThread(flowable, epType).subscribeWith(subscriber));
-    }
-
-    protected <T extends BaseResponse> void doRequest(Flowable<T> flowable, EPType epType, Consumer<T> onNext) {
-        mComposite.add(doInMainThread(flowable, epType).subscribe(onNext, new SubscribeOnError(mNetRequestHelper, epType)));
-    }
-
-    protected <T extends BaseResponse> void doRequest(Flowable<T> flowable, EPType epType, Consumer<T> onNext, Consumer<Throwable> onError) {
-        mComposite.add(doInMainThread(flowable, epType).subscribe(onNext, onError));
-    }
-
-    protected <T extends BaseResponse> void doRequest(Flowable<T> flowable, EPType epType, Consumer<T> onNext, Consumer<Throwable> onError, Action onComplete) {
-        mComposite.add(doInMainThread(flowable, epType).subscribe(onNext, onError, onComplete));
-    }
-
     @Override
     public void unsubscribe() {
-        if (mComposite != null) {
-            mComposite.clear();
-        }
+
     }
+
+    public Flowable doInMainThread(Flowable flowable, EPType epType) {
+        BaseConsumerFactory baseConsumerFactory = BaseConsumerFactory.getInstance(mNetRequestHelper, epType);
+        return flowable.compose(RxSchedules.mainThread()).
+                doOnSubscribe(baseConsumerFactory.create(BaseConsumer.START)).
+                doOnNext(baseConsumerFactory.create(BaseConsumer.NEXT)).
+                doOnComplete(() -> mNetRequestHelper.hideProgressDialog()).
+                doOnError(baseConsumerFactory.create(BaseConsumer.ERROR));
+    }
+
+    public <T> void doRequest(Flowable<T> flowable, EPType epType, DisposableSubscriber<T> subscriber) {
+        BaseConsumerFactory.getInstance(mNetRequestHelper, epType);
+        mNetRequestHelper.add((Disposable) doInMainThread(flowable, epType).subscribeWith(subscriber));
+    }
+
+    public <T> void doRequest(Flowable<T> flowable, EPType epType, ResourceSubscriber<T> subscriber) {
+        mNetRequestHelper.add((Disposable) doInMainThread(flowable, epType).subscribeWith(subscriber));
+    }
+
+    public <T extends BaseResponse> void doRequest(Flowable<T> flowable, EPType epType, Consumer<T> onNext) {
+        mNetRequestHelper.add(doInMainThread(flowable, epType).subscribe(onNext));
+    }
+
+    public <T extends BaseResponse> void doRequest(Flowable<T> flowable, EPType epType, Consumer<T> onNext, Consumer<Throwable> onError) {
+        mNetRequestHelper.add(doInMainThread(flowable, epType).subscribe(onNext, onError));
+    }
+
+    public <T extends BaseResponse> void doRequest(Flowable<T> flowable, EPType epType, Consumer<T> onNext, Consumer<Throwable> onError, Action onComplete) {
+        mNetRequestHelper.add(doInMainThread(flowable, epType).subscribe(onNext, onError, onComplete));
+    }
+
+
 }

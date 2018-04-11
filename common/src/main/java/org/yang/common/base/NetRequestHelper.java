@@ -4,12 +4,23 @@ import android.support.annotation.StringRes;
 
 import org.yang.common.net.EPType;
 
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+
 /**
  * 网络请求辅助类
  * Created by Gxy on 2017/4/19
  */
 
 public interface NetRequestHelper {
+    CompositeDisposable mComposite = new CompositeDisposable();
+
+    /**
+     * 添加网络处理的流
+     *
+     * @param disposable
+     */
+    void add(Disposable disposable);
 
     /**
      * Toast显示提示

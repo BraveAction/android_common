@@ -15,7 +15,7 @@ import retrofit2.HttpException;
  */
 public class SubscribeOnError extends BaseConsumer<Throwable> {
 
-    public SubscribeOnError(NetRequestHelper netRequestHelper, EPType EPType) {
+    protected SubscribeOnError(NetRequestHelper netRequestHelper, EPType EPType) {
         super(netRequestHelper, EPType);
     }
 
