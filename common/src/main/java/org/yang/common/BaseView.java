@@ -16,7 +16,11 @@
 
 package org.yang.common;
 
-public interface BaseView<T> {
+import android.os.Bundle;
+
+public interface BaseView {
 
     void close();
+
+    void forward(Bundle bundle, Class cls);
 }

@@ -12,11 +12,17 @@ public interface BaseAdapter {
 
     RecyclerView.Adapter getAdapter();
 
+    void addData(int index, List data);
+
+    void addData(int index, Object object);
+
     Object getItem(int position);
 
     List getData();
 
     void setData(List data);
+
+    void addData(Object object);
 
     void addData(List data);
 

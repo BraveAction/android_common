@@ -1,5 +1,6 @@
 package org.yang.common.fragment;
 
+import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,7 +19,7 @@ import io.reactivex.Flowable;
 import io.reactivex.subscribers.DisposableSubscriber;
 
 
-public abstract class BaseRecyclerViewFragment<RESP> extends BaseLazyFragment implements OnRecyclerViewLoadListener {
+public abstract class BaseRecyclerViewFragment<VB extends ViewDataBinding, RESP> extends BaseLazyFragment<VB> implements OnRecyclerViewLoadListener {
     protected RecyclerViewEmptySupport mRecyclerView;
     protected BaseAdapter mAdapter;
     protected int mCurrentPage = 1;
@@ -38,9 +39,9 @@ public abstract class BaseRecyclerViewFragment<RESP> extends BaseLazyFragment im
 
     @Override
     public void inflateViews() {
-        mRecyclerView = (RecyclerViewEmptySupport) mRootLayout.findViewById(R.id.recyclerView);
+        mRecyclerView = mRootLayout.findViewById(R.id.recyclerView);
         RecyclerViewUtils.setBaseProperties(mRecyclerView);
-        mPtrFrameLayout = (PtrFrameLayout) mRootLayout.findViewById(R.id.refreshLayout);
+        mPtrFrameLayout = mRootLayout.findViewById(R.id.refreshLayout);
         if (mPtrFrameLayout != null) {
             RecyclerViewUtils.setRecyclerViewPtrl(mRecyclerView, mPtrFrameLayout, this);
         }
@@ -76,14 +77,14 @@ public abstract class BaseRecyclerViewFragment<RESP> extends BaseLazyFragment im
      * @param operation
      * @return
      */
-    protected abstract Flowable getRequestParameter(OnRecyclerViewLoadListener.PullOperation operation);
+    protected abstract Flowable getRequestParameter(PullOperation operation);
 
 
     @Override
     public void onRefresh(PtrFrameLayout frame) {
 
         mCurrentPage = 1;
-        Flowable flowable = getRequestParameter(OnRecyclerViewLoadListener.PullOperation.REFRESH);
+        Flowable flowable = getRequestParameter(PullOperation.REFRESH);
         if (flowable == null) {
             mPtrFrameLayout.refreshComplete();
 
@@ -127,7 +128,7 @@ public abstract class BaseRecyclerViewFragment<RESP> extends BaseLazyFragment im
 
     @Override
     public void onLoadMore(PtrFrameLayout frame) {
-        Flowable flowable = getRequestParameter(OnRecyclerViewLoadListener.PullOperation.LOADMORE);
+        Flowable flowable = getRequestParameter(PullOperation.LOADMORE);
         if (flowable == null) {
             return;
         }

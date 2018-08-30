@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
+
     <data>
-        <variable name="onClickListener" type="android.view.View.OnClickListener"></variable>
+
+        <variable
+            name="onClickListener"
+            type="android.view.View.OnClickListener"></variable>
     </data>
+
     <RelativeLayout
         android:id="@+id/errorLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/activityBgColor"
-        android:clickable="true"
         android:gravity="center"
-        android:onClick="@{onClickListener.onClick}"
+        android:onClick="@{onClickListener::onClick}"
         android:visibility="gone">
 
         <ImageView
@@ -18,7 +22,7 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_centerHorizontal="true"
-            android:src="@mipmap/not_data"/>
+            android:src="@mipmap/no_data" />
 
         <TextView
             android:id="@+id/errorMsg"
@@ -29,6 +33,6 @@
             android:layout_marginTop="17dp"
             android:gravity="center"
             android:text="@string/noData"
-            android:textColor="@color/gray"/>
+            android:textColor="@color/gray" />
     </RelativeLayout>
 </layout>

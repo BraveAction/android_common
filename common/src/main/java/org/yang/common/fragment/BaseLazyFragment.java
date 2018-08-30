@@ -40,14 +40,14 @@ import io.reactivex.disposables.Disposable;
 /**
  * Created by Gxy on 2017/2/4
  */
-public abstract class BaseLazyFragment extends Fragment implements BaseWindow, View.OnClickListener, NetRequestHelper {
+public abstract class BaseLazyFragment<VB extends ViewDataBinding> extends Fragment implements BaseWindow, View.OnClickListener, NetRequestHelper {
     private final int MEMORY_CACHE_MAXSIZE = 5 * 1024 * 1024;
     protected LruCache<Object, Object> mMemoryCache;
     protected boolean isViewInitiated;
     protected boolean isVisibleToUser;
     protected boolean isDataInitiated;
 
-    protected ViewDataBinding mBinding;
+    protected VB mBinding;
     protected View mRootLayout;
     protected SuperActivity mContext;
     protected Toolbar mToolbar;
@@ -196,7 +196,7 @@ public abstract class BaseLazyFragment extends Fragment implements BaseWindow, V
 //        ActionBar不要显示标题,自定义的标题会居中
             mContext.getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        设置返回按键图片
-//            mContext.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_back);
+            mContext.getSupportActionBar().setHomeAsUpIndicator(R.mipmap.back);
 //        显示返回按键
             mContext.getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             //去除导航按钮的边距
@@ -272,10 +272,10 @@ public abstract class BaseLazyFragment extends Fragment implements BaseWindow, V
     public void onHandleException(EPType EPType, int errorMsg) {
         switch (EPType) {
             case PAGE:
-                View errorLayout = mRootLayout.findViewById(org.yang.common.R.id.errorLayout);
+                View errorLayout = mRootLayout.findViewById(R.id.errorLayout);
                 if (errorLayout != null) {
                     errorLayout.setVisibility(View.VISIBLE);
-                    TextView errorMsgHint = (TextView) errorLayout.findViewById(org.yang.common.R.id.errorMsg);
+                    TextView errorMsgHint = (TextView) errorLayout.findViewById(R.id.errorMsg);
                     if (errorMsgHint != null) {
                         errorMsgHint.setText(errorMsg);
                     }

@@ -1,13 +1,19 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.2.31'
+    ext.kotlin_version = '1.2.41'
     ext.greendaoPluginVersion = '3.2.2'
     repositories {
         jcenter()
+        mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0'
+        classpath 'com.android.tools.build:gradle:3.1.4'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.greenrobot:greendao-gradle-plugin:$greendaoPluginVersion"
         classpath 'me.tatarka:gradle-retrolambda:3.6.1'
@@ -20,8 +26,13 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
+        maven { url "https://jitpack.io"}
+        maven { url 'https://repo.eclipse.org/content/repositories/paho-releases/'}
         mavenCentral()
+        maven {
+            url 'https://maven.google.com/'
+            name 'Google'
+        }
     }
 }
 
@@ -43,12 +54,12 @@ ext {
     versionCode = 1
 
     //tool version
-    compileSdkVersion = 25
-    buildToolsVersion = "25.0.2"
+    compileSdkVersion = 27
+    buildToolsVersion = "27.0.3"
     minSdkVersion = 14
     targetSdkVersion = 25
 
-    supportLibVersion = "25.2.0"
+    supportLibVersion = "27.1.1"
 
     //Test version
     junitVersion = '4.12'

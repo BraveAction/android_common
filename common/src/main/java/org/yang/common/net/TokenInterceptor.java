@@ -1,9 +1,11 @@
 package org.yang.common.net;
 
 import java.io.EOFException;
+import java.io.IOException;
 
 import okhttp3.Interceptor;
 import okhttp3.Request;
+import okhttp3.Response;
 import okio.Buffer;
 
 /**
@@ -11,6 +13,27 @@ import okio.Buffer;
  * Created by Gxy on 2017/4/24
  */
 public abstract class TokenInterceptor implements Interceptor {
+
+    @Override
+    public Response intercept(Chain chain) throws IOException {
+
+        Response response;
+        try {
+            Request oldRequest = chain.request();
+
+            // 新的请求,添加参数
+            Request newRequest = addSignParameters(oldRequest);
+            if (newRequest != null) {
+                response = chain.proceed(newRequest);
+            } else {
+                response = chain.proceed(oldRequest);
+            }
+        } catch (Exception e) {
+            throw e;
+        }
+        return response;
+    }
+
     /**
      * 添加公共参数
      *

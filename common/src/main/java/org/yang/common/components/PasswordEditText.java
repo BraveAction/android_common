@@ -19,7 +19,7 @@ import org.yang.common.R;
 
 public class PasswordEditText extends AppCompatEditText implements OnFocusChangeListener, TextWatcher {
     /**
-     * 删除按钮的引用
+     * 密码按钮的引用
      */
     private Drawable mEye;
     private Drawable mEyeShow;
@@ -45,17 +45,15 @@ public class PasswordEditText extends AppCompatEditText implements OnFocusChange
         mEye = getCompoundDrawables()[2];
         mEyeShow = getCompoundDrawables()[2];
         if (mEye == null) {
-            // throw new
-            // NullPointerException("You can add drawableRight attribute in XML");
-            mEye = ContextCompat.getDrawable(getContext(), R.drawable.icon_eye_nor);
+            mEye = ContextCompat.getDrawable(getContext(), R.mipmap.hide);
         }
         if (mEyeShow == null) {
-            mEyeShow = ContextCompat.getDrawable(getContext(), R.drawable.icon_eye_show);
+            mEyeShow = ContextCompat.getDrawable(getContext(), R.mipmap.show);
         }
         mEyeShow.setBounds(0, 0, mEye.getIntrinsicWidth(), mEye.getIntrinsicHeight());
         mEye.setBounds(0, 0, mEye.getIntrinsicWidth(), mEye.getIntrinsicHeight());
         // 默认设置隐藏图标
-        setClearIconVisible(false);
+        setClearIconVisible(true);
         // 设置焦点改变的监听
         setOnFocusChangeListener(this);
         // 设置输入框里面内容发生改变的监听
@@ -93,9 +91,11 @@ public class PasswordEditText extends AppCompatEditText implements OnFocusChange
     public void onFocusChange(View v, boolean hasFocus) {
         this.hasFoucs = hasFocus;
         if (hasFocus) {
-            setClearIconVisible(getText().length() > 0);
+//            setClearIconVisible(getText().length() > 0);
+            setClearIconVisible(true);
         } else {
-            setClearIconVisible(false);
+//            setClearIconVisible(false);
+            setClearIconVisible(true);
         }
     }
 
@@ -105,11 +105,11 @@ public class PasswordEditText extends AppCompatEditText implements OnFocusChange
      * @param visible
      */
     protected void setClearIconVisible(boolean visible) {
-        Drawable right = visible ? mEye : null;
+        Drawable right = visible ? mEyeShow : null;
         setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1], right, getCompoundDrawables()[3]);
         TransformationMethod transformationMethod = getTransformationMethod();
         if (transformationMethod instanceof HideReturnsTransformationMethod && right != null) {
-            setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1], mEyeShow, getCompoundDrawables()[3]);
+            setCompoundDrawables(getCompoundDrawables()[0], getCompoundDrawables()[1], mEye, getCompoundDrawables()[3]);
         }
 
     }

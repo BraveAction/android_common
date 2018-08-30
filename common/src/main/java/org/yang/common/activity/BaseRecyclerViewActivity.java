@@ -2,10 +2,8 @@ package org.yang.common.activity;
 
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.RecyclerView;
 
-import org.reactivestreams.Subscription;
 import org.yang.common.R;
 import org.yang.common.base.BaseResponse;
 import org.yang.common.components.OnRecyclerViewLoadListener;
@@ -18,8 +16,7 @@ import java.util.List;
 
 import in.srain.cube.views.ptr.PtrFrameLayout;
 import io.reactivex.Flowable;
-import io.reactivex.FlowableSubscriber;
-import io.reactivex.annotations.NonNull;
+import io.reactivex.subscribers.DisposableSubscriber;
 
 /**
  * 单个列表(RecyclerView)界面
@@ -44,7 +41,7 @@ public abstract class BaseRecyclerViewActivity<VB extends ViewDataBinding, S, RE
     public void inflateViews() {
         mRecyclerView = (RecyclerViewEmptySupport) findViewById(R.id.recyclerView);
         RecyclerViewUtils.setBaseProperties(mRecyclerView);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         mRecyclerView.setEmptyView(findViewById(R.id.errorLayout));
         mRecyclerView.setLayoutManager(getLayoutManager());
 
@@ -81,20 +78,17 @@ public abstract class BaseRecyclerViewActivity<VB extends ViewDataBinding, S, RE
      * @param operation
      * @return
      */
-    protected abstract Flowable getRequestParameter(OnRecyclerViewLoadListener.PullOperation operation);
+    protected abstract Flowable getRequestParameter(PullOperation operation);
 
 
     @Override
     public void onRefresh(PtrFrameLayout frame) {
         mCurrentPage = 1;
-        Flowable flowable = getRequestParameter(OnRecyclerViewLoadListener.PullOperation.REFRESH);
+        Flowable flowable = getRequestParameter(PullOperation.REFRESH);
         if (flowable == null) {
             return;
         }
-        FlowableSubscriber flowableSubscriber = new FlowableSubscriber<RESP>() {
-            @Override
-            public void onSubscribe(@NonNull Subscription s) {
-            }
+        DisposableSubscriber flowableSubscriber = new DisposableSubscriber<RESP>() {
 
             @Override
             public void onNext(RESP sendGoodOrder) {
@@ -102,6 +96,7 @@ public abstract class BaseRecyclerViewActivity<VB extends ViewDataBinding, S, RE
                 if (list != null) {
                     mAdapter.setData(list);
                 }
+                mAdapter.notifyDataSetChanged();
             }
 
 
@@ -133,20 +128,16 @@ public abstract class BaseRecyclerViewActivity<VB extends ViewDataBinding, S, RE
      * 封装结果
      */
 
-    protected abstract List packageData(RESP object);
+    protected abstract List packageData(RESP data);
 
 
     @Override
     public void onLoadMore(PtrFrameLayout frame) {
-        Flowable flowable = getRequestParameter(OnRecyclerViewLoadListener.PullOperation.LOADMORE);
+        Flowable flowable = getRequestParameter(PullOperation.LOADMORE);
         if (flowable == null) {
             return;
         }
-        FlowableSubscriber flowableSubscriber = new FlowableSubscriber<RESP>() {
-            @Override
-            public void onSubscribe(@NonNull Subscription s) {
-
-            }
+        DisposableSubscriber flowableSubscriber = new DisposableSubscriber<RESP>() {
 
             @Override
             public void onNext(RESP sendGoodOrder) {

@@ -11,7 +11,7 @@ import android.util.AttributeSet;
  */
 
 public class IconFontView extends android.support.v7.widget.AppCompatTextView {
-    public static final String ICONFONT_PHARMACY_TTF = "iconfont_pharmacy.ttf";
+    public static final String ICONFONT_PHARMACY_TTF = "iconfont.ttf";
     private Typeface typeface;
 
     public IconFontView(Context context) {
@@ -31,7 +31,8 @@ public class IconFontView extends android.support.v7.widget.AppCompatTextView {
     private void init(Context context) {
         AssetManager assetManager = context.getAssets();
         typeface = Typeface.createFromAsset(assetManager, ICONFONT_PHARMACY_TTF);
-        setTypeface(typeface);
+        this.setTypeface(typeface);
+        setIncludeFontPadding(false);
     }
 
 }

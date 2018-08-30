@@ -15,12 +15,12 @@ public interface BaseWindow {
 
     /**
      * 发送请求,此接口在fragment中使用(必须实现)
-     *  @param flowable
+     *
+     * @param flowable
      * @param subscriber
      * @param baseConsumerFactory
      */
     void doRequest(Flowable flowable, FlowableSubscriber subscriber, BaseConsumerFactory baseConsumerFactory);
-//    <T extends Disposable> void doRequest(Flowable flowable, T subscriber, SubscribeOnError error);
 
     /**
      * 加载通用视图

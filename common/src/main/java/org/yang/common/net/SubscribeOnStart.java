@@ -16,7 +16,7 @@ public final class SubscribeOnStart extends BaseConsumer<Subscription> {
     }
 
     @Override
-    public void accept(@NonNull Subscription subscription) throws Exception {
+    public void accept(@NonNull Subscription subscription) {
         if (mEPType != EPType.SILENT) {
             mNetRequestHelper.showProgressDialog();
         }

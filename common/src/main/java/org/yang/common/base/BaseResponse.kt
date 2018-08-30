@@ -6,7 +6,7 @@ package org.yang.common.base
  */
 abstract class BaseResponse {
     /**
-     * 获取提示信息
+     * 用户操作未成功,获取提示信息
      */
     abstract fun getNoExpectedResponseHint(): String?
 

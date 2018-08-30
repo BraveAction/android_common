@@ -26,10 +26,10 @@
         <paths>
             <external-path
                 name="camera_photos"
-                path="/org.yang.common/"/>
+                path="/org.yang.common/" />
             <external-path
                 name="appUpgradeDir"
-                path="/org.yang.common/"/>
+                path="/org.yang.common/" />
         </paths>
     </resources>
 </resources>

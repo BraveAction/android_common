@@ -58,12 +58,12 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
         if (mClearDrawable == null) {
             // throw new
             // NullPointerException("You can add drawableRight attribute in XML");
-            mClearDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.icon_clear);
+            mClearDrawable = ContextCompat.getDrawable(getContext(), R.mipmap.del);
         }
 
         mClearDrawable.setBounds(0, 0, mClearDrawable.getIntrinsicWidth(), mClearDrawable.getIntrinsicHeight());
         // 默认设置隐藏图标
-        setClearIconVisible(false);
+        setClearIconVisible(true);
         // 设置焦点改变的监听
         setOnFocusChangeListener(this);
         // 设置输入框里面内容发生改变的监听
@@ -96,7 +96,8 @@ public class ClearEditText extends android.support.v7.widget.AppCompatEditText i
     public void onFocusChange(View v, boolean hasFocus) {
         this.hasFoucs = hasFocus;
         if (hasFocus) {
-            setClearIconVisible(getText().length() > 0);
+            setClearIconVisible(true);
+//            setClearIconVisible(getText().length() > 0);
         } else {
             setClearIconVisible(false);
         }

@@ -15,15 +15,13 @@ import io.reactivex.subscribers.DisposableSubscriber;
 import io.reactivex.subscribers.ResourceSubscriber;
 
 /**
- * 特性:
- * 1:事件的订阅和取消(RxAndroid/RxJave)
- * 2:提供给子类网络接口服务(Retrofit)
+ * 提供给子类网络接口服务(Retrofit)
  * Created by Gxy on 2017/7/19
  */
 
 public abstract class ReRxPresenter<S> implements BasePresenter {
     protected S mApiServices = (S) RetrofitClient.getInstance().getServices();
-    private NetRequestHelper mNetRequestHelper;
+    protected NetRequestHelper mNetRequestHelper;
 
     public ReRxPresenter(NetRequestHelper netRequestHelper) {
         this.mNetRequestHelper = netRequestHelper;
@@ -44,12 +42,16 @@ public abstract class ReRxPresenter<S> implements BasePresenter {
         return flowable.compose(RxSchedules.mainThread()).
                 doOnSubscribe(baseConsumerFactory.create(BaseConsumer.START)).
                 doOnNext(baseConsumerFactory.create(BaseConsumer.NEXT)).
-                doOnComplete(() -> mNetRequestHelper.hideProgressDialog()).
+                doOnComplete(new Action() {
+                    @Override
+                    public void run() {
+                        mNetRequestHelper.hideProgressDialog();
+                    }
+                }).
                 doOnError(baseConsumerFactory.create(BaseConsumer.ERROR));
     }
 
     public <T> void doRequest(Flowable<T> flowable, EPType epType, DisposableSubscriber<T> subscriber) {
-        BaseConsumerFactory.getInstance(mNetRequestHelper, epType);
         mNetRequestHelper.add((Disposable) doInMainThread(flowable, epType).subscribeWith(subscriber));
     }
 

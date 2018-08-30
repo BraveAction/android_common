@@ -1,6 +1,8 @@
 package org.yang.common.binding;
 
+import android.content.res.AssetManager;
 import android.databinding.BindingAdapter;
+import android.graphics.Typeface;
 import android.view.View;
 import android.widget.TextView;
 
@@ -35,6 +37,20 @@ public class BaseBindingAdapter {
     @BindingAdapter("viewSelected")
     public static void setViewSelected(View view, boolean selected) {
         view.setSelected(selected);
+    }
+
+    /**
+     * 绑定可选择控件,如:图片背景选择(解决属性不对应的问题)
+     *
+     * @param view
+     * @param icon
+     */
+    @BindingAdapter("icon")
+    public static void setIconFont(TextView view, String icon) {
+        AssetManager assetManager = view.getContext().getAssets();
+        Typeface typeface = Typeface.createFromAsset(assetManager, "iconfont.ttf");
+        view.setTypeface(typeface);
+        view.setText(icon);
     }
 
     /**

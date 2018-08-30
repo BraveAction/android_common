@@ -56,7 +56,7 @@ public class OkHttpUrlLoader implements StreamModelLoader<GlideUrl> {
 
         private static Call.Factory getInternalClient() {
             if (internalClient == null) {
-                synchronized (OkHttpUrlLoader.Factory.class) {
+                synchronized (Factory.class) {
                     if (internalClient == null) {
                         internalClient = new OkHttpClient();
                     }

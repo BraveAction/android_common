@@ -1,12 +1,14 @@
 package org.yang.common.net;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,7 +39,6 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.internal.platform.Platform;
 import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Converter;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -74,10 +75,7 @@ public final class RetrofitClient {
      * @param interceptors  //用于添加特定拦截器()
      */
     public static void init(Context context, String baseUrl, Class servicesClass, List<TokenInterceptor> interceptors) {
-        mContext = context;
-        mGson = new Gson();
-        mBaseUrl = baseUrl;
-        mServicesClass = servicesClass;
+        init(context, baseUrl, servicesClass);
         mInterceptors = interceptors;
     }
 
@@ -88,13 +86,37 @@ public final class RetrofitClient {
      */
     public static void init(Context context, String baseUrl, Class servicesClass) {
         mContext = context;
-        mGson = new Gson();
+        mGson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+//                .addDeserializationExclusionStrategy(new ExclusionStrategy() {
+//                    @Override
+//                    public boolean shouldSkipField(FieldAttributes fieldAttributes) {
+//                        Collection<Annotation> annotations = fieldAttributes.getAnnotations();
+//                        if (!annotations.contains(Expose.class)) {
+//                            return true;
+//                        }
+//                        return false;
+//                    }
+//
+//                    @Override
+//                    public boolean shouldSkipClass(Class<?> clazz) {
+//                        return false;
+//                    }
+//                })
+                .create();
+//        mGson=new Gson();
         mBaseUrl = baseUrl;
         mServicesClass = servicesClass;
     }
 
     public static RetrofitClient getInstance() {
+        if (mContext == null) {
+            Log.e("RetrofitClient", "mContent is null 没有初始化");
+            return null;
+        }
+
         if (ourInstance == null) {
+
             ourInstance = new RetrofitClient();
         }
         return ourInstance;
@@ -125,10 +147,30 @@ public final class RetrofitClient {
     }
 
     private static OkHttpClient.Builder getOKhttpBuilder() {
+
+        if (mContext == null) {
+            return null;
+        }
+        //cookie
         ClearableCookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(mContext));
 
-//         SSLSocketFactory sslSocketFactory = getSocketFactory(mContext);
+
+        //单向证书SSLContext
+        SSLContext sslcontext = null;
+        X509TrustManager trustManager = getX509TrustManager();
+        try {
+            sslcontext = SSLContext.getInstance("TLS");
+            sslcontext.init(null, new TrustManager[]{trustManager}, null);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (KeyManagementException e) {
+            e.printStackTrace();
+        }
+
+
+        //双向证书sslSocketFactory
+//        SSLSocketFactory sslSocketFactory = getSocketFactory(mContext);
 
 //        X509TrustManager trustManager;
 //        SSLSocketFactory sslSocketFactory;
@@ -141,25 +183,15 @@ public final class RetrofitClient {
 //            throw new RuntimeException(e);
 //        }
 
-        //设置SSLContext
-        SSLContext sslcontext = null;
-        X509TrustManager trustManager = getX509TrustManager();
-        try {
-            sslcontext = SSLContext.getInstance("TLS");
-            sslcontext.init(null, new TrustManager[]{trustManager}, null);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (KeyManagementException e) {
-            e.printStackTrace();
-        }
-
+        //服务器域名校验
         HostnameVerifier hostnameVerifier = new HostnameVerifier() {
             @Override
             public boolean verify(String hostname, SSLSession session) {
-                //XXX 校验服务器域名
+                //上线使用
 //                HostnameVerifier hostnameVerifier1 = HttpsURLConnection.getDefaultHostnameVerifier();
-//                Boolean result = hostnameVerifier1.verify("jiexian.biz", session);
+//                Boolean result = hostnameVerifier1.verify(hostname, session);
 //                return result;
+                //开发使用
                 return true;
             }
         };
@@ -171,9 +203,11 @@ public final class RetrofitClient {
 //                .addNetworkInterceptor(new CacheInterceptor())        //get请求缓存
                 .hostnameVerifier(hostnameVerifier)
 //                .sslSocketFactory(sslSocketFactory, getX509TrustManager(sslSocketFactory))        //https双向认证
-                .sslSocketFactory(sslcontext.getSocketFactory(), trustManager)
+//                .sslSocketFactory(sslcontext.getSocketFactory(), trustManager)
                 .cache(new Cache(mContext.getCacheDir(), DISK_CACHE_MAXSIZ))
                 .cookieJar(cookieJar)
+                .writeTimeout(10, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.MILLISECONDS);
 
 
@@ -182,40 +216,24 @@ public final class RetrofitClient {
 
 
     private static Retrofit.Builder getRetrofitBuilder(OkHttpClient okHttpClient) {
-        Converter.Factory gsonConverterFactory = GsonConverterFactory.create(mGson);
         return new Retrofit.Builder()
                 .client(okHttpClient)
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(gsonConverterFactory);
-//                .addConverterFactory(new JsonStringConverterFactory(gsonConverterFactory));
+                .addConverterFactory(GsonConverterFactory.create(mGson));
+//                .addConverterFactory(new JsonStringConverterFactory(gsonConverterFactory));       //get方式传输json数据
+//                Call<ResponseBody> example(@Json @Query("value")  Bean value);
     }
 
-    private static X509TrustManager getX509TrustManager(SSLSocketFactory sslSocketFactory) {
-        return Platform.get().trustManager(sslSocketFactory);
-    }
 
     /**
+     * 获取证书管理器
+     *
      * @return
      */
-    private static X509Certificate getX509Certificate() {
-        X509Certificate serverCert = null;
-        try {
-            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
-            InputStream trust_input = mContext.getAssets().open("server01.cer");
-            serverCert = (X509Certificate) certificateFactory.generateCertificate(trust_input);
-
-        } catch (CertificateException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return serverCert;
-    }
-
     private static X509TrustManager getX509TrustManager() {
         return new X509TrustManager() {
             @Override
-            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            public void checkClientTrusted(X509Certificate[] chain, String authType) {
             }
 
             @Override
@@ -250,6 +268,32 @@ public final class RetrofitClient {
                 return x509Certificates;
             }
         };
+    }
+
+    /**
+     * 获取证书
+     *
+     * @return
+     */
+    private static X509Certificate getX509Certificate() {
+        X509Certificate serverCert = null;
+        try {
+            CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509", "BC");
+            InputStream trust_input = mContext.getAssets().open("2_jingyoukeji.cn.crt");
+            serverCert = (X509Certificate) certificateFactory.generateCertificate(trust_input);
+
+        } catch (CertificateException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
+        return serverCert;
+    }
+
+    private static X509TrustManager getX509TrustManager(SSLSocketFactory sslSocketFactory) {
+        return Platform.get().trustManager(sslSocketFactory);
     }
 
     /**
@@ -329,21 +373,13 @@ public final class RetrofitClient {
      * @return
      */
     public Object getServices() {
-        return mServices;
+
+        if (ourInstance == null) {
+            return null;
+        } else {
+            return mServices;
+        }
     }
 
 
-//    public static void getData(String url, Map parameters, final Subscriber<Object> objectSubscriber) {
-//        Flowable flowable = mServices.executeGet(url, parameters);
-//        flowable.compose(new FlowableTransformerOnBackground())
-//                .map(new Mapper(objectSubscriber))
-//                .safeSubscribe(objectSubscriber);
-//    }
-//
-//    public static void postData(String url, final Subscriber<Object> objectSubscriber, Object parameter) {
-//        Flowable flowable = mServices.executePost(url, parameter);
-//        flowable.compose(new FlowableTransformerOnBackground())
-//                .map(new Mapper(objectSubscriber))
-//                .safeSubscribe(objectSubscriber);
-//    }
 }

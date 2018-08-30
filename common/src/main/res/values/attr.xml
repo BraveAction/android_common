@@ -2,8 +2,8 @@
 <resources>
     <!--圆形图片-->
     <declare-styleable name="CircleImageView">
-        <attr name="border_width" format="dimension"/>
-        <attr name="border_color" format="color"/>
-        <attr name="border_overlay" format="boolean"/>
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+        <attr name="border_overlay" format="boolean" />
     </declare-styleable>
 </resources>

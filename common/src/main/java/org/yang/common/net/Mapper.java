@@ -25,7 +25,7 @@ public class Mapper<T extends ResponseBody> implements Function<T, Object> {
 
     //操作结果集
     @Override
-    public Object apply(@NonNull T res) throws Exception {
+    public Object apply(@NonNull T res) {
 
         try {
             Optional<Class> actualType = getActualType();

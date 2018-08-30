@@ -43,6 +43,7 @@ import io.reactivex.disposables.Disposable;
 public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends BaseResponse> extends AppCompatActivity implements BaseWindow, View.OnClickListener, NetRequestHelper {
     protected S mApiServices;
     protected VB mBinding;
+    private TextView mTitleTextView;
     private RetrofitClient mRetrofitClient;
     //    private ProgressDialog mProgressDialog;
     private CustomProgressDialog mProgressDialog;
@@ -50,6 +51,12 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int layoutId = getLayoutId();
+        if (layoutId == 0) {
+            throw new IllegalArgumentException("View is not a binding layout");
+        }
+
         mBinding = DataBindingUtil.setContentView(this, getLayoutId());
         mBinding.setVariable(BR.onClickListener, this);
         onInit();
@@ -192,8 +199,8 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
     /**
      * 初始化toolbar
      */
-    public void initToolbar(@IdRes int toolbarId) {
-        Toolbar toolbar = (Toolbar) findViewById(toolbarId);
+    protected void initToolbar(@IdRes int toolbarId) {
+        Toolbar toolbar = findViewById(toolbarId);
         if (toolbar != null) {
 //        设置标题
             toolbar.setTitle(getTitle());
@@ -203,7 +210,8 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
 //        toolbar.setNavigationIcon(getResources().getDrawable(R.drawable.navg));
 //        设置标题文本颜色
 //            toolbar.setTitleTextColor(0xFFC000);
-//        设置子标题文本颜色
+//        设置子标题文本颜
+// 色
 //            toolbar.setSubtitleTextColor(Color.argb(255, 20, 20, 255));
 //        设置ActionBar
             setSupportActionBar(toolbar);
@@ -211,19 +219,25 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
 //        ActionBar不要显示标题,自定义的标题会居中
             getSupportActionBar().setDisplayShowTitleEnabled(false);
 //        设置返回按键图片
-            getSupportActionBar().setHomeAsUpIndicator(R.mipmap.ic_back);
+            getSupportActionBar().setHomeAsUpIndicator(R.mipmap.back);
 //        显示返回按键
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        设置标题
-            TextView title = ((TextView) toolbar.findViewById(R.id.toolbarTitle));
-            if (title != null) {
+            mTitleTextView = toolbar.findViewById(R.id.toolbarTitle);
+            if (mTitleTextView != null) {
                 CharSequence titleName = getTitle();
                 if (!TextUtils.isEmpty(titleName)) {
-                    title.setText(titleName);
+                    mTitleTextView.setText(titleName);
                 } else {
                     throw new RuntimeException("请在AndroidManifest.xml中为Activity设置label");
                 }
             }
+        }
+    }
+
+    public void setToolbarTitle(String title) {
+        if (mTitleTextView != null) {
+            mTitleTextView.setText(title);
         }
     }
 
@@ -272,7 +286,7 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
                 View errorLayout = findViewById(R.id.errorLayout);
                 if (errorLayout != null) {
                     errorLayout.setVisibility(View.VISIBLE);
-                    TextView errorMsgHint = (TextView) errorLayout.findViewById(R.id.errorMsg);
+                    TextView errorMsgHint = errorLayout.findViewById(R.id.errorMsg);
                     if (errorMsgHint != null) {
                         errorMsgHint.setText(errorMsg);
                     }
@@ -287,6 +301,11 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
         }
     }
 
+    /**
+     * 点击指定的异常视图
+     *
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.errorLayout) {
@@ -309,10 +328,10 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
         if (executeMethod != null) {
             try {
                 if (!executeMethod.isAccessible()) executeMethod.setAccessible(true);
-                executeMethod.invoke(this, (Object) null);
+                executeMethod.invoke(this);
                 View errorLayout = findViewById(R.id.errorLayout);
                 if (errorLayout != null) {
-                    errorLayout.setVisibility(View.GONE);
+//                    errorLayout.setVisibility(View.GONE);
                 }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
@@ -336,11 +355,11 @@ public abstract class SuperActivity<VB extends ViewDataBinding, S, RES extends B
 
     @Override
     public void doRequest(Flowable flowable, FlowableSubscriber subscriber, BaseConsumerFactory baseConsumerFactory) {
-        mComposite.add((Disposable) flowable.compose(RxSchedules.mainThread()).
+        mComposite.add((Disposable) (flowable.compose(RxSchedules.mainThread()).
                 doOnSubscribe(baseConsumerFactory.create(BaseConsumer.START)).
                 doOnNext(baseConsumerFactory.create(BaseConsumer.NEXT)).
                 doOnComplete(() -> this.hideProgressDialog()).
-                doOnError(baseConsumerFactory.create(BaseConsumer.ERROR))
+                doOnError(baseConsumerFactory.create(BaseConsumer.ERROR)))
                 .subscribeWith(subscriber));
     }
 

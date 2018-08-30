@@ -21,7 +21,7 @@ SuperAdapter extends RecyclerView.Adapter<SuperViewHolder> implements BaseAdapte
     protected int variableId;       //同一列表下的单元格使用同一别名标示
     protected List data = new ArrayList();
     protected IItemClickListener iItemClickListener;
-    private android.databinding.DataBindingComponent mDataBindingComponent;
+//    private android.databinding.DataBindingComponent mDataBindingComponent;
 
     public SuperAdapter(int layoutResId, int variableId) {
         this(new Integer[]{layoutResId}, variableId, null);
@@ -36,35 +36,35 @@ SuperAdapter extends RecyclerView.Adapter<SuperViewHolder> implements BaseAdapte
         this.data = data;
     }
 
-    public SuperAdapter(int layoutResId, int variableId, IItemClickListener iItemClickListener, android.databinding.DataBindingComponent dataBindingComponent) {
-        this(layoutResId, variableId, iItemClickListener);
-        this.mDataBindingComponent = dataBindingComponent;
-    }
+//    public SuperAdapter(int layoutResId, int variableId, IItemClickListener iItemClickListener, android.databinding.DataBindingComponent dataBindingComponent) {
+//        this(layoutResId, variableId, iItemClickListener);
+//        this.mDataBindingComponent = dataBindingComponent;
+//    }
 
     public SuperAdapter(Integer[] layoutResIds, int variableId, IItemClickListener iItemClickListener) {
         this.layoutId = layoutResIds;
         this.variableId = variableId;
         this.iItemClickListener = iItemClickListener;
     }
-
-    public android.databinding.DataBindingComponent getDataBindingComponent() {
-        return mDataBindingComponent;
-    }
-
-    public void setDataBindingComponent(android.databinding.DataBindingComponent mDataBindingComponent) {
-        this.mDataBindingComponent = mDataBindingComponent;
-    }
+//
+//    public android.databinding.DataBindingComponent getDataBindingComponent() {
+//        return mDataBindingComponent;
+//    }
+//
+//    public void setDataBindingComponent(android.databinding.DataBindingComponent mDataBindingComponent) {
+//        this.mDataBindingComponent = mDataBindingComponent;
+//    }
 
     @Override
     public SuperViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         //viewType的类型码,按ItemView的布局文件所在的下标对应,且必须实现getItemView方法
         ViewDataBinding viewDataBinding;
-        if (mDataBindingComponent == null) {
-            viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutId[viewType], parent, false);
-        } else {
-            viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutId[viewType], parent, false, mDataBindingComponent);
-        }
+//        if (mDataBindingComponent == null) {
+        viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutId[viewType], parent, false);
+//        } else {
+//            viewDataBinding = DataBindingUtil.inflate(layoutInflater, layoutId[viewType], parent, false, mDataBindingComponent);
+//        }
 
         if (viewDataBinding != null) {
             if (layoutId.length == 1) {     //只有一个布局无需传递viewType
@@ -96,6 +96,12 @@ SuperAdapter extends RecyclerView.Adapter<SuperViewHolder> implements BaseAdapte
     }
 
     @Override
+    public void addData(Object object) {
+        this.data.add(object);
+        notifyDataSetChanged();
+    }
+
+    @Override
     public RecyclerView.Adapter getAdapter() {
         return this;
     }
@@ -104,6 +110,18 @@ SuperAdapter extends RecyclerView.Adapter<SuperViewHolder> implements BaseAdapte
     public void addData(List data) {
         this.data.addAll(data);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void addData(int index, Object object) {
+        this.data.add(index, object);
+        notifyDataSetChanged();
+    }
+
+    @Override
+    public void addData(int index, List data) {
+        this.data.addAll(index, data);
+//        notifyDataSetChanged();
     }
 
     @Override
@@ -134,6 +152,7 @@ SuperAdapter extends RecyclerView.Adapter<SuperViewHolder> implements BaseAdapte
             notifyItemRemoved(position);
             this.data.remove(position);
         }
+        notifyDataSetChanged();
     }
 
     @Override

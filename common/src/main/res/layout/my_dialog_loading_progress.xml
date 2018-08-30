@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:gravity="center"
-              android:minWidth="150dp"
-              android:orientation="vertical">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:minWidth="150dp"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/id_fa_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:src="@mipmap/spinner"
-    />
+        android:src="@mipmap/spinner" />
 
     <TextView
         android:id="@+id/id_text_msg"
@@ -20,6 +19,5 @@
         android:layout_height="wrap_content"
         android:paddingLeft="10dp"
         android:text="加载中..."
-        android:textColor="@android:color/black"
-    />
+        android:textColor="@android:color/black" />
 </LinearLayout>

@@ -1,17 +1,19 @@
-<manifest package="org.yang.common"
-          xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.yang.common">
+
     <uses-sdk tools:overrideLibrary="com.beloo.widget.chipslayoutmanager"></uses-sdk>
-    <application android:allowBackup="true"
-                 android:supportsRtl="true">
-        <provider
-            android:name="android.support.v4.content.FileProvider"
-            android:authorities="@string/authority"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"/>
-        </provider>
+    <application
+        android:allowBackup="true"
+        android:supportsRtl="true">
+        <!--<provider-->
+        <!--android:name="android.support.v4.content.FileProvider"-->
+        <!--android:authorities="@string/authority"-->
+        <!--android:exported="false"-->
+        <!--android:grantUriPermissions="true">-->
+        <!--<meta-data-->
+        <!--android:name="android.support.FILE_PROVIDER_PATHS"-->
+        <!--android:resource="@xml/file_paths" />-->
+        <!--</provider>-->
     </application>
 </manifest>

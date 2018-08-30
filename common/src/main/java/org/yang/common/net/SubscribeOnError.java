@@ -20,7 +20,7 @@ public class SubscribeOnError extends BaseConsumer<Throwable> {
     }
 
     @Override
-    public void accept(@NonNull Throwable throwable) throws Exception {
+    public void accept(@NonNull Throwable throwable) {
         throwable.printStackTrace();
 
         int errorRes = R.string.myException;

@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.alibaba.android.vlayout.VirtualLayoutManager;
+
 import org.yang.common.components.BaseRefreshLayout;
 import org.yang.common.components.OnRecyclerViewLoadListener;
 import org.yang.common.components.RecyclerViewPtrBaseHandler;

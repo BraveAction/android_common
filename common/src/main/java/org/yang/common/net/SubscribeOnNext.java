@@ -17,11 +17,11 @@ public final class SubscribeOnNext<T extends BaseResponse> extends BaseConsumer<
     }
 
     @Override
-    public void accept(@NonNull T response) throws Exception {
+    public void accept(@NonNull T response) {
         String hint = response.getSuccessMessage();
         if (!TextUtils.isEmpty(hint) && hint != "null") {
             mNetRequestHelper.hideProgressDialog();
-            if (mEPType != EPType.SILENT && mEPType != EPType.PAGE) {
+            if (mEPType == EPType.TOAST) {     //操作成功后显示信息（Toast方式）
                 mNetRequestHelper.showMessage(hint);
             }
         }
